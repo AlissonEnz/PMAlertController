@@ -127,7 +127,7 @@ import UIKit
         let textField = UITextField()
         textField.delegate = self
         textField.returnKeyType = .done
-        textField.font = UIFont(name: "Avenir-Heavy", size: 18)
+        textField.font = UIFont(name: "Avenir-Heavy", size: 20)
         textField.textAlignment = .center
         configuration (textField)
         _addTextField(textField)
