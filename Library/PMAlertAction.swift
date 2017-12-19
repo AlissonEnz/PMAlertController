@@ -41,9 +41,9 @@ open class PMAlertAction: UIButton {
         self.actionStyle = style
         switch style {
         case .default:
-            self.setTitleColor(UIColor.gray, for: .normal)
+            self.setTitleColor(.gray, for: .normal)
         case .cancel:
-            self.setTitleColor(UIColor(red: 191.0/255.0, green: 51.0/255.0, blue: 98.0/255.0, alpha: 1.0), for: .normal)
+            self.setTitleColor(UIColor(red: 255.0/255.0, green: 92.0/255.0, blue: 92.0/255.0, alpha: 1.0), for: .normal)
         case .custom(let color):
             self.setTitleColor(color, for: .normal)
         }

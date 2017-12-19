@@ -13,6 +13,11 @@ import UIKit
     case walkthrough //The alert will adopt a width of the screen size minus 18 (from the left and right side). This style is designed to accommodate localization, push notifications and more.
 }
 
+@objc public protocol PMAlertControllerDelegate:class {
+    @objc optional func alertControllerWillClose(alertController:PMAlertController)
+    @objc optional func alertControllerDidClose(alertController:PMAlertController)
+}
+
 @objc open class PMAlertController: UIViewController {
     
     // MARK: Properties
@@ -26,12 +31,11 @@ import UIKit
     @IBOutlet weak open var alertDescription: UILabel!
     @IBOutlet weak open var alertActionStackView: UIStackView!
     @IBOutlet weak open var alertStackViewHeightConstraint: NSLayoutConstraint!
-    open var ALERT_STACK_VIEW_HEIGHT : CGFloat = UIScreen.main.bounds.height < 568.0 ? 40 : 62 //if iphone 4 the stack_view_height is 40, else 62
-    var animator : UIDynamicAnimator?
     
+    open var ALERT_STACK_VIEW_HEIGHT : CGFloat = 80
     open var textFields: [UITextField] = []
-    
-    open var dismissWithBackgroudTouch = false // enable touch background to dismiss. Off by default.
+    open var dismissWithBackgroudTouch = true
+    open weak var delegate:PMAlertControllerDelegate?
     
     //MARK: - Lifecycle
     
@@ -49,6 +53,7 @@ import UIKit
     
     
     //MARK: - Initialiser
+    
     @objc public convenience init(title: String, description: String, image: UIImage?, style: PMAlertControllerStyle) {
         self.init()
         let nib = loadNibAlertController()
@@ -81,6 +86,7 @@ import UIKit
     }
     
     //MARK: - Actions
+    
     @objc open func addAction(_ alertAction: PMAlertAction) {
         alertActionStackView.addArrangedSubview(alertAction)
         
@@ -97,7 +103,10 @@ import UIKit
     }
     
     @objc fileprivate func dismissAlertController(_ sender: PMAlertAction) {
-        self.dismiss(animated: true, completion: nil)
+        self.delegate?.alertControllerWillClose?(alertController: self)
+        self.dismiss(animated: true) {
+            self.delegate?.alertControllerDidClose?(alertController: self)
+        }
     }
     
     @objc fileprivate func dismissAlertControllerFromBackgroundTap() {
@@ -105,10 +114,14 @@ import UIKit
             return
         }
         
-        self.dismiss(animated: true, completion: nil)
+        self.delegate?.alertControllerWillClose?(alertController: self)
+        self.dismiss(animated: true) {
+            self.delegate?.alertControllerDidClose?(alertController: self)
+        }
     }
 
     //MARK: - Text Fields
+    
     @objc open func addTextField(_ configuration: (_ textField: UITextField?) -> Void) {
         let textField = UITextField()
         textField.delegate = self
@@ -118,6 +131,7 @@ import UIKit
         configuration (textField)
         _addTextField(textField)
     }
+    
     func _addTextField(_ textField: UITextField) {
         alertActionStackView.addArrangedSubview(textField)
         alertStackViewHeightConstraint.constant = ALERT_STACK_VIEW_HEIGHT * CGFloat(alertActionStackView.arrangedSubviews.count)
@@ -130,6 +144,7 @@ import UIKit
     }
     
     //MARK: - Customizations
+    
     @objc fileprivate func setShadowAlertView() {
         alertView.layer.masksToBounds = false
         alertView.layer.shadowOffset = CGSize(width: 0, height: 0)
