@@ -31,7 +31,6 @@ import UIKit
     
     open var textFields: [UITextField] = []
     
-    open var gravityDismissAnimation = true
     open var dismissWithBackgroudTouch = false // enable touch background to dismiss. Off by default.
     
     //MARK: - Lifecycle
@@ -65,9 +64,14 @@ import UIKit
         alertTitle.text = title
         alertDescription.text = description
         
+        let width = UIScreen.main.bounds.width
         
-        //if alert width = 270, else width = screen width - 36
-        style == .alert ? (alertViewWidthConstraint.constant = 270) : (alertViewWidthConstraint.constant = UIScreen.main.bounds.width - 36)
+        switch style {
+        case .alert:
+            alertViewWidthConstraint.constant = width - 200
+        case .walkthrough:
+            alertViewWidthConstraint.constant = width - 60
+        }
         
         //Gesture recognizer for background dismiss with background touch
         let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(dismissAlertControllerFromBackgroundTap))
@@ -77,14 +81,13 @@ import UIKit
     }
     
     //MARK: - Actions
-    @objc open func addAction(_ alertAction: PMAlertAction){
+    @objc open func addAction(_ alertAction: PMAlertAction) {
         alertActionStackView.addArrangedSubview(alertAction)
         
         if alertActionStackView.arrangedSubviews.count > 2 || hasTextFieldAdded(){
             alertStackViewHeightConstraint.constant = ALERT_STACK_VIEW_HEIGHT * CGFloat(alertActionStackView.arrangedSubviews.count)
             alertActionStackView.axis = .vertical
-        }
-        else{
+        } else {
             alertStackViewHeightConstraint.constant = ALERT_STACK_VIEW_HEIGHT
             alertActionStackView.axis = .horizontal
         }
@@ -93,8 +96,7 @@ import UIKit
         
     }
     
-    @objc fileprivate func dismissAlertController(_ sender: PMAlertAction){
-        self.animateDismissWithGravity(sender.actionStyle)
+    @objc fileprivate func dismissAlertController(_ sender: PMAlertAction) {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -103,82 +105,54 @@ import UIKit
             return
         }
         
-        self.animateDismissWithGravity(.cancel)
         self.dismiss(animated: true, completion: nil)
     }
 
     //MARK: - Text Fields
-    @objc open func addTextField(_ configuration: (_ textField: UITextField?) -> Void){
+    @objc open func addTextField(_ configuration: (_ textField: UITextField?) -> Void) {
         let textField = UITextField()
         textField.delegate = self
         textField.returnKeyType = .done
-        textField.font = UIFont(name: "Avenir-Heavy", size: 17)
+        textField.font = UIFont(name: "Avenir-Heavy", size: 18)
         textField.textAlignment = .center
         configuration (textField)
         _addTextField(textField)
     }
-    func _addTextField(_ textField: UITextField){
+    func _addTextField(_ textField: UITextField) {
         alertActionStackView.addArrangedSubview(textField)
         alertStackViewHeightConstraint.constant = ALERT_STACK_VIEW_HEIGHT * CGFloat(alertActionStackView.arrangedSubviews.count)
         alertActionStackView.axis = .vertical
         textFields.append(textField)
     }
     
-    func hasTextFieldAdded () -> Bool{
+    func hasTextFieldAdded () -> Bool {
         return textFields.count > 0
     }
     
     //MARK: - Customizations
-    @objc fileprivate func setShadowAlertView(){
+    @objc fileprivate func setShadowAlertView() {
         alertView.layer.masksToBounds = false
         alertView.layer.shadowOffset = CGSize(width: 0, height: 0)
         alertView.layer.shadowRadius = 8
         alertView.layer.shadowOpacity = 0.3
     }
     
-    @objc fileprivate func loadNibAlertController() -> [AnyObject]?{
+    @objc fileprivate func loadNibAlertController() -> [AnyObject]? {
         let podBundle = Bundle(for: self.classForCoder)
         
-        if let bundleURL = podBundle.url(forResource: "PMAlertController", withExtension: "bundle"){
+        if let bundleURL = podBundle.url(forResource: "PMAlertController", withExtension: "bundle") {
             
             if let bundle = Bundle(url: bundleURL) {
                 return bundle.loadNibNamed("PMAlertController", owner: self, options: nil) as [AnyObject]?
-            }
-            else {
+            } else {
                 assertionFailure("Could not load the bundle")
             }
-            
-        }
-        else if let nib = podBundle.loadNibNamed("PMAlertController", owner: self, options: nil) as [AnyObject]?{
+        } else if let nib = podBundle.loadNibNamed("PMAlertController", owner: self, options: nil) as [AnyObject]? {
             return nib
-        }
-        else{
+        } else {
             assertionFailure("Could not create a path to the bundle")
         }
         return nil
-    }
-    
-    //MARK: - Animations
-    
-    @objc fileprivate func animateDismissWithGravity(_ style: PMAlertActionStyle){
-        if gravityDismissAnimation == true{
-            var radian = Double.pi
-            if style == .default {
-                radian = 2 * Double.pi
-            }else{
-                radian = -2 * Double.pi
-            }
-            animator = UIDynamicAnimator(referenceView: self.view)
-            
-            let gravityBehavior = UIGravityBehavior(items: [alertView])
-            gravityBehavior.gravityDirection = CGVector(dx: 0, dy: 10)
-            
-            animator?.addBehavior(gravityBehavior)
-            
-            let itemBehavior = UIDynamicItemBehavior(items: [alertView])
-            itemBehavior.addAngularVelocity(CGFloat(radian), for: alertView)
-            animator?.addBehavior(itemBehavior)
-        }
     }
     
     //MARK: - Keyboard avoiding
@@ -189,8 +163,8 @@ import UIKit
     @objc func keyboardWillShow(_ notification: Notification) {
         keyboardHasBeenShown = true
         
-        guard let userInfo = (notification as NSNotification).userInfo else {return}
-        guard let endKeyBoardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.minY else {return}
+        guard let userInfo = (notification as NSNotification).userInfo else { return }
+        guard let endKeyBoardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.minY else { return }
         
         if tempFrameOrigin == nil {
             tempFrameOrigin = alertView.frame.origin
@@ -205,7 +179,7 @@ import UIKit
     
     @objc func keyboardWillHide(_ notification: Notification) {
         if (keyboardHasBeenShown) { // Only on the simulator (keyboard will be hidden)
-            if (tempFrameOrigin != nil){
+            if (tempFrameOrigin != nil) {
                 alertView.frame.origin.y = tempFrameOrigin!.y
                 tempFrameOrigin = nil
             }

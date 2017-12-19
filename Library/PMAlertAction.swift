@@ -8,13 +8,15 @@
 
 import UIKit
 
-@objc public enum PMAlertActionStyle : Int {
+public enum PMAlertActionStyle {
     
     case `default`
     case cancel
+    case custom(UIColor)
+    
 }
 
-@objc open class PMAlertAction: UIButton {
+open class PMAlertAction: UIButton {
     
     fileprivate var action: (() -> Void)?
     
@@ -22,22 +24,29 @@ import UIKit
     
     open var separator = UIImageView()
     
-    init(){
+    init() {
         self.actionStyle = .cancel
         super.init(frame: CGRect.zero)
     }
     
-    @objc public convenience init(title: String?, style: PMAlertActionStyle, action: (() -> Void)? = nil){
+    public convenience init(title: String?, style: PMAlertActionStyle, action: (() -> Void)? = nil) {
         self.init()
         
         self.action = action
         self.addTarget(self, action: #selector(PMAlertAction.tapped(_:)), for: .touchUpInside)
         
-        self.setTitle(title, for: UIControlState())
-        self.titleLabel?.font = UIFont(name: "Avenir-Heavy", size: 17)
+        self.setTitle(title, for: .normal)
+        self.titleLabel?.font = UIFont(name: "Avenir-Heavy", size: 18)
         
         self.actionStyle = style
-        style == .default ? (self.setTitleColor(UIColor(red: 191.0/255.0, green: 51.0/255.0, blue: 98.0/255.0, alpha: 1.0), for: UIControlState())) : (self.setTitleColor(UIColor.gray, for: UIControlState()))
+        switch style {
+        case .default:
+            self.setTitleColor(UIColor.gray, for: .normal)
+        case .cancel:
+            self.setTitleColor(UIColor(red: 191.0/255.0, green: 51.0/255.0, blue: 98.0/255.0, alpha: 1.0), for: .normal)
+        case .custom(let color):
+            self.setTitleColor(color, for: .normal)
+        }
         
         self.addSeparator()
     }
@@ -50,7 +59,7 @@ import UIKit
         self.action?()
     }
     
-    @objc fileprivate func addSeparator(){
+    fileprivate func addSeparator(){
         separator.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
         self.addSubview(separator)
         

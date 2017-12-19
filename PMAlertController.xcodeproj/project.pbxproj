@@ -272,14 +272,17 @@
 				TargetAttributes = {
 					453B4ED51CDE3F0A00BFB901 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 7VXMF2S9BV;
 						LastSwiftMigration = 0900;
 					};
 					453B4EE91CDE3F0A00BFB901 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 7VXMF2S9BV;
 						TestTargetID = 453B4ED51CDE3F0A00BFB901;
 					};
 					453B4EF41CDE3F0A00BFB901 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 7VXMF2S9BV;
 						TestTargetID = 453B4ED51CDE3F0A00BFB901;
 					};
 					526FBB211CF0FD63005E5970 = {
@@ -525,6 +528,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerSample;
@@ -539,6 +543,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerSample;
@@ -553,6 +558,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerTests;
@@ -565,6 +571,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerTests;
@@ -576,6 +583,7 @@
 		453B4F051CDE3F0A00BFB901 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertControllerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerUITests;
@@ -587,6 +595,7 @@
 		453B4F061CDE3F0A00BFB901 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 7VXMF2S9BV;
 				INFOPLIST_FILE = PMAlertControllerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codeido.PMAlertControllerUITests;
