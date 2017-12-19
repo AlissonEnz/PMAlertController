@@ -111,6 +111,7 @@ import UIKit
     
     @objc fileprivate func dismissAlertControllerFromBackgroundTap() {
         if !dismissWithBackgroudTouch {
+            self.view.endEditing(true)
             return
         }
         
