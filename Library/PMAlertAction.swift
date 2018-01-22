@@ -56,7 +56,9 @@ open class PMAlertAction: UIButton {
     }
     
     @objc func tapped(_ sender: PMAlertAction) {
-        self.action?()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.action?()
+        }
     }
     
     fileprivate func addSeparator(){
